@@ -133,4 +133,4 @@ indices <- ggplot() +
 ## Guardar el plot en resultados ##
 
 # Supongamos que tu objeto gráfico se llama indices
-ggsave("Figuras/idices_alpha.jpg", plot = indices, width = 8, height = 6)
+ggsave("Figuras/idices_alpha.jpg", plot = indices, width = 12.5, height = 2.5)
