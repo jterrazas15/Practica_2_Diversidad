@@ -130,6 +130,41 @@ tabla <- tableGrob(indices_alpha) # Transforma los objetos que forman la tabla e
 indices <- ggplot() +
   annotation_custom(tabla)
 
+##################################
+####### Riqueza de especies ######
+#################################
+
+riqueza <- Diversidadd_fichas %>%
+  group_by(Sitio) %>%
+  summarise( riqueza = sum(Abundancias > 0))
+
+riqueza
+
+
+##################################
+####### Matriz de especie-sitio ######
+#################################
+
+matriz <- Diversidadd_fichas %>%
+  pivot_wider(names_from = Muestra,
+              values_from =  Abundancias,
+              values_fill = 0)
+matriz <- as.data.frame(matriz)
+rownames(matriz) <- matriz$Sitio 
+matriz <- matriz [, -1]
+
+matriz <- as.matrix(matriz)
+
+chao1 <- estimateR (matriz)
+tabla_chao1 <- data.frame(
+  Sitio = rownames(matriz),
+  Chaoo1 = chao1 ["S.chao1",]
+)
+rownames(tabla_chao1) <- NULL
+tabla_chao1
+
+
+
 ## Guardar el plot en resultados ##
 
 # Supongamos que tu objeto gráfico se llama indices
