@@ -167,6 +167,83 @@ tabla_chao1 <- data.frame(
 rownames(tabla_chao1) <- NULL
 tabla_chao1
 
+##################################
+##### Curvas de rarefaccion #####
+################################
+
+lista_sit <- split(t(matriz), rownames(t(matriz)))
+salir <- iNEXT(lista_sit, q = 0, datatype = "abundance")
+
+grafico_rare <- ggiNEXT(salir, type = 1) +
+  scale_color_viridis_d(option = "plasma") +
+  labs( title = "Curvas de rarefaccion", 
+        x = "Numero de individuos muestreados", 
+        y= "Riqueza de especies") +
+  theme_classic(base_size = 12)
+
+grafico_rare
+
+ggsave("Figuras/rarefaccion.jpg",
+       grafico_rare,
+       width = 8,
+       height = 6)
+
+##################################
+#####Grafico rango-abundancia####
+################################
+
+rank_da <- Diversidadd_fichas %>%
+  group_by(Sitio, Muestra) %>%
+  summarise(n = sum(Abundancias)) %>%
+  filter(n > 0) %>%
+  group_by(Sitio) %>%
+  mutate( prop = n/ sum(n),
+          rango = rank(-prop, ties.method = "first")) %>%
+  ungroup()
+grafico_rank <- ggplot(rank_da, aes(x=rango, y = log10(prop), color = Sitio)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  labs( title = "Grafica de rango- abundancia", 
+        x= "Rango de especie",
+        y = "log10(Abundancia relativa)") +
+  theme_classic()
+
+grafico_rank
+
+ggsave ("Figuras/rank_abundance.jpg",
+        grafico_rank,
+        width = 8,
+        height = 6)
+##################################
+##########Diversidad beta########
+################################
+
+library(reshape2)
+
+jac <- vegdist(matriz, method = "jaccard", binary = T)
+
+brac <- vegdist( matriz, method = "bray")
+
+plot_be <- function (dist_obj, titulo) {
+  melt (as.matrix(dist_obj)) %>%
+    ggplot(aes(Var1, Var2, fill = value)) +
+    geom_tile(color = "white") +
+    geom_text(aes(label = round(value,2)), size = 3.5) +
+    scale_fill_gradient(
+      low = "#E8F5E9",
+      high = "#1B5E20",
+      name = "Disimilitud"
+    ) +
+    labs ( title = titulo, 
+           x = NULL,
+           y = NULL) +
+    theme_minimal(base_size = 11)+
+    theme( axis.text.x = element_text(angle = 45, hjust = 1)
+    )
+}
+
+plot_be(jac, "Disimilitud de jaccard")
+plot_be(brac, "Disimilitud de Bray-Curtis")
 
 
 
