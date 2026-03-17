@@ -29,3 +29,5 @@ alfa <- data.frame(
   inv_simp = diversity(Diversidad, index = "invsimpson"), 
   pielou   = diversity(Diversidad, "shannon") / log(specnumber(sp_matrix)) 
 )
+
+lslk
