@@ -129,6 +129,10 @@ tabla <- tableGrob(indices_alpha) # Transforma los objetos que forman la tabla e
 ## Crear un gráfico vacío y añadir la tabla ##
 indices <- ggplot() +
   annotation_custom(tabla)
+## Guardar el plot en resultados ##
+
+# Supongamos que tu objeto gráfico se llama indices
+ggsave("Figuras/idices_alpha.jpg", plot = indices, width = 12.5, height = 2.5)
 
 ##################################
 ####### Riqueza de especies ######
@@ -165,7 +169,4 @@ tabla_chao1
 
 
 
-## Guardar el plot en resultados ##
 
-# Supongamos que tu objeto gráfico se llama indices
-ggsave("Figuras/idices_alpha.jpg", plot = indices, width = 12.5, height = 2.5)
