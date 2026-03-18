@@ -8,6 +8,7 @@ install.packages("iNEXT")
 library(tidyverse)
 library(vegan)
 library(iNEXT)
+library(dbplyr)
 
 glimpse(Diversidad_fichas)
 
@@ -140,7 +141,7 @@ ggsave("Figuras/idices_alpha.jpg", plot = indices, width = 12.5, height = 2.5)
 ####### Riqueza de especies ######
 #################################
 
-riqueza <- Diversidadd_fichas %>%
+riqueza <- Diversidad_fichas %>%
   group_by(Sitio) %>%
   summarise( riqueza = sum(Abundancias > 0))
 
@@ -151,7 +152,7 @@ riqueza
 ####### Matriz de especie-sitio ######
 #################################
 
-matriz <- Diversidadd_fichas %>%
+matriz <- Diversidad_fichas %>%
   pivot_wider(names_from = Muestra,
               values_from =  Abundancias,
               values_fill = 0)
@@ -167,7 +168,18 @@ tabla_chao1 <- data.frame(
   Chaoo1 = chao1 ["S.chao1",]
 )
 rownames(tabla_chao1) <- NULL
-tabla_chao1
+
+cha <- tabla_chao1
+
+library(ggplot2)
+
+cha_plot <- ggplot(tabla_chao1, aes(x = Muestra, y = Chao1)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Índice Chao1 por muestra")
+
+# Ahora sí puedes guardar
+ggsave("Figuras/Indice_Chao1.jpg", plot = cha_plot, width = 8, height = 6)
 
 ##################################
 ##### Curvas de rarefaccion #####
@@ -185,16 +197,13 @@ grafico_rare <- ggiNEXT(salir, type = 1) +
 
 grafico_rare
 
-ggsave("Figuras/rarefaccion.jpg",
-       grafico_rare,
-       width = 8,
-       height = 6)
+ggsave("Figuras/Rarefacción.jpg", plot = grafico_rare, width = 8, height = 6)
 
 ##################################
 #####Grafico rango-abundancia####
 ################################
 
-rank_da <- Diversidadd_fichas %>%
+rank_da <- Diversidad_fichas %>%
   group_by(Sitio, Muestra) %>%
   summarise(n = sum(Abundancias)) %>%
   filter(n > 0) %>%
@@ -205,17 +214,15 @@ rank_da <- Diversidadd_fichas %>%
 grafico_rank <- ggplot(rank_da, aes(x=rango, y = log10(prop), color = Sitio)) +
   geom_line(linewidth = 1) +
   geom_point(size = 2.5) +
-  labs( title = "Grafica de rango- abundancia", 
+  labs( title = "Grafica de rango-abundancia", 
         x= "Rango de especie",
         y = "log10(Abundancia relativa)") +
   theme_classic()
 
 grafico_rank
 
-ggsave ("Figuras/rank_abundance.jpg",
-        grafico_rank,
-        width = 8,
-        height = 6)
+ggsave ("Figuras/Rank_abundance.jpg", grafico_rank, width = 8, height = 6)
+
 ##################################
 ##########Diversidad beta########
 ################################
@@ -244,8 +251,11 @@ plot_be <- function (dist_obj, titulo) {
     )
 }
 
-plot_be(jac, "Disimilitud de jaccard")
-plot_be(brac, "Disimilitud de Bray-Curtis")
+jac <- plot_be(jac, "Disimilitud de jaccard")
+bray <- plot_be(brac, "Disimilitud de Bray-Curtis")
+
+ggsave ("Figuras/Disimilitud de Jaccard.jpg", jac, width = 8, height = 6)
+ggsave ("Figuras/Disimilitud de Bray-Curtis.jpg", bray, width = 8, height = 6)
 
 
 
