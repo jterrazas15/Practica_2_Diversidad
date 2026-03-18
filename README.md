@@ -148,7 +148,7 @@ riqueza
 
 
 ##################################
-####### Matriz de especie-sitio ######
+#### Matriz de especie-sitio ####
 #################################
 
 matriz <- Diversidadd_fichas %>%
@@ -191,7 +191,7 @@ ggsave("Figuras/rarefaccion.jpg",
        width = 8,
        height = 6)
     
-B) Curvas de rarefacción
+# B) Curvas de rarefacción
 
 e) P5. ¿Cuál sitio alcanza la asíntota más rápidamente? ¿Qué te dice eso sobre la estructura
 de la comunidad?
@@ -231,7 +231,7 @@ tabla_rarefaccion
 
 
 ##################################
-#####Grafico rango-abundancia####
+### Grafico rango-abundancia ###
 ################################
 
 rank_da <- Diversidadd_fichas %>%
@@ -256,8 +256,30 @@ ggsave ("Figuras/rank_abundance.jpg",
         grafico_rank,
         width = 8,
         height = 6)
+
+# C. Gráficas de rango-abundancia
+h) P8. Identifica la forma general de cada curva (log-normal, geométrica, etc.). ¿Qué modelo
+ecológico subyace a cada forma? ¿Qué mecanismos comunitarios podrían explicarla?
+El el caso del sitio A solo pudismos observar un punto en la parte superior de la grafica, esto nos indica que tiene una sola especie. 
+El el caso del sitio B,C,D,E y G presentan forma geometrica, el modelo ecologico subyacente es el de particion secuencial de recursos, donde la especie dominante ocupa la mayor fraccion del recurso disponible, esto ocurre en comunidades simples con alta dominancia.
+En el sitio F no se observa ningun punto o linea en la grafica. 
+
+i) P9. ¿En qué sitio la especie más dominante representa la mayor fracción de individuos?
+¿Cómo se relaciona ese resultado con el índice de Simpson?
+En la grafica podemos observar que la especie mas dominante representa la mayor fraccion de individuos en el sitio B, ya que su primera especie tiene el valor mas alto de log10 cercano a 0, que en la escala original equivale a una abundancia relativa de 1 o sea casi el 100% de los individuos.
+Se relaciona con el indice de Simpson ya que mide la probabilidad de que dos individuos seleccionados al azar sean de la misma especie (dominancia), en este caso el sitio B tendra un valor alto en el indice de Simpson ya que su primera esoecie como lo mencione representa mas de la mitad de los individuos, pero tendra un valor bajo en el indice se Simpson inverso, ya qie representa el numero efectivo de especies equivalentes. 
+
+j) P10. Imagina que en un monitoreo de largo plazo una curva log-normal se convierte en
+geométrica. ¿Qué perturbación ecológica podría explicarlo?
+El cambio de este nos indica una fuerte perturbacion que simplifica el ecosistema, algunos ejemplos de perturbaciones que podrian ser la causante de esto serian: 
+-Perturbacion antropogenica severa, como la deforestacion, contaminacion extrema o indencios forestaes, los cuales eliminan a la mayoria de espedies y permiten la proliferacion de unas pocas. 
+-Introduccion de una nueva especie invasora muy competitiva, como alguna especie exotica puede ser hiperdominante lo cual pudiese desplazar a las demas y pueden acaparar los recursos. 
+-Estres ambiental cronico, Cambio en las condiciones ambientales como lo es el aumento de temperatura, que supera los limites de tolerancia de la mayoria de las especies, dejando solo a las mas resientes. 
+
+
+
 ##################################
-##########Diversidad beta########
+### Diversidad beta ###
 ################################
 
 library(reshape2)
@@ -286,3 +308,21 @@ plot_be <- function (dist_obj, titulo) {
 
 plot_be(jac, "Disimilitud de jaccard")
 plot_be(brac, "Disimilitud de Bray-Curtis")
+
+# D. Diversidad beta
+k) P11. Analiza la matriz de Bray-Curtis. ¿Qué par de sitios es más diferente? ¿Es el mismo
+par más diferente según Jaccard? Si no coinciden, ¿a qué se debe?
+En este caso la matriz de Bray-Curtis, el par mas distinro es el sitio_A y sitio_D los cuales tienen un valor de disimilitud de 0.98, en cambio en el Jaccard el par de sitios mas diferente es el sitio_C y sitio_A con un valor de 0.92. 
+No es el mismo par, esto se debe a que jaccard es un indice cualitativo es decir esta basado solo en ausencia o presencia de especies, el alto valor entre C y A nos indica que comparten muy pocas especies, en cambio Bray-Curtis es un indice cuantitativo ya que considera las abundancias de las especies, el alto valor entre A y D nos indica que comparten pocas especies, las abundancias que comparten son diferentes. 
+
+l) P12. ¿Qué componentes del recambio beta (reemplazo vs. anidamiento) podrían explicar
+los patrones que observas? (Pista: investiga el paquete betapart en R.)
+El componente de reemplazo es muy fuerte entre ciertos pares de sitios, como lo es en el caso del sitio A (tiene una sola especie) vs el sitio C muestran un alto reemplazo, ya que sus especies son completamente diferentes, esto nos indica un cambio en la identidad de las especies a lo largo de un gradiente ambiental. 
+El componente de anidamiento: Los sitios con forma geometrica y menor riqueza podrian ser subconjuntos anidados de sitios mas diversos como el B. Esto sugeriria un proceso de filtrado ambiental o perdida de especies, para confirmarlo tendriamos que usar el paquete betapart el cual descompone la disimilitud total (Jaccard) en: 
+-βJTU=reemplazo (cambio de especies)
+-βJNE=anidamiento (perdida de especie)
+
+m) P13. Si estos sitios representaran puntos a lo largo de un gradiente altitudinal, ¿qué patrón
+de beta-diversidad esperarías según la teoría del dominio medio (mid-domain effect)?
+¿Coincide con tus resultados?
+El patron esperado predice que la riqueza de especies sera maxima en el centro del gradiente y disminuira hacia los extremos, lo cual nos generaria un patron de anidamiento, donde las comunidades de los extremos son subconjuntos depauperados de la comunidad del centro, con poco reemplazo de especies. Nuestros resultados no coinciden completamente, ya que aunque podemos observar un cierto anidamiento (C,D,E,G podrian ser subconjuntos de B), tambien hay un fuerte componente de reemplazo, especialmente entre el sitio A y los demas, lo que nos sugiere que ademas de la perdida de especies hay in cambio de identidad de especies a lo  largo del gradiente. 
