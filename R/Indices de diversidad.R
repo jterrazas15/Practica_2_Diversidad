@@ -112,6 +112,8 @@ tabla_pielou <- Diversidad_fichas %>% # Se crea un objeto, donde se guarara la t
 
 tabla_pielou
 
+### Juntar las tablas con la columna en comun 
+
 indices_alpha <- tabla_pielou %>%
   left_join(tabla_insimpson, by = "Sitio") %>%
   left_join(tabla_shannon, by = "Sitio") %>%
